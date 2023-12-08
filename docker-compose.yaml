@@ -1,0 +1,42 @@
+version: '3.8'
+
+
+services:
+  postgres:
+    image: postgres
+    volumes:
+      - ./scripts_sql.sql:/docker-entrypoint-initdb.d/scripts_sql.sql
+    environment:
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_USER: "postgres"
+    ports:
+      - "5432:5432"
+  cache:
+    image: redis:latest
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes: 
+      - cache:/data
+    environment:
+    - REDIS_PASSWORD=123456
+    - REDIS_DATABASES=0
+  cliente.api:
+    image: ${DOCKER_REGISTRY-}cliente.api
+    container_name: cliente.api
+    build:
+      context: .
+      dockerfile: ClienteAPI\ClienteAPI\Dockerfile
+    ports:
+      - 5006:80  
+  motorista.api:
+    image: ${DOCKER_REGISTRY-}motorista.api
+    container_name: motorista.api
+    build:
+      context: .
+      dockerfile: MotoristaAPI\MotoristaAPI\Dockerfile
+    ports:
+      - 5007:80  
+volumes:
+  cache:
+    driver: local
