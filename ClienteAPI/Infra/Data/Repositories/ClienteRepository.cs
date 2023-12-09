@@ -1,4 +1,6 @@
-﻿using Domain.DTO;
+﻿
+
+using Domain.DTO.Clientes;
 using Domain.Entities;
 using Domain.Interfaces.Data;
 using Npgsql;
@@ -95,14 +97,15 @@ namespace Infra.Data.Repositories
             var conn = dataSource.OpenConnection();
             try
             {
-                var cmd = new NpgsqlCommand("insert into cliente (id, nome, cpf) " +
-                    " values (@p1, @p2, @p3) ", conn)
+                var cmd = new NpgsqlCommand("insert into cliente (id, nome, cpf, saldo) " +
+                    " values (@p1, @p2, @p3, @p4) ", conn)
                 {
                     Parameters =
                     {
                         new("p1", cliente.Id),
                         new("p2", cliente.Nome),
                         new("p3", cliente.CPF),
+                        new("p4", cliente.Saldo),
                     }
                 };
 

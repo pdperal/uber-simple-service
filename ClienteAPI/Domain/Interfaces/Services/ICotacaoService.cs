@@ -1,4 +1,5 @@
 ﻿using Domain.DTO.Clientes;
+using Domain.DTO.Cotacao;
 using Domain.Entities;
 using Domain.ViewModels;
 using System;
@@ -9,9 +10,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces.Services
 {
-    public interface IClienteService
+    public interface ICotacaoService
     {
-        public Result<NovoClienteViewModel> CadastrarCliente(NovoClienteDTO cliente);
-        public Result<List<ClienteViewModel>> ListarClientes();
+        public Result<Cotacao> SolicitarCotacao(NovaCotacaoDTO novaCotacaoDTO);
     }
 }

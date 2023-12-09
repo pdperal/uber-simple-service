@@ -21,6 +21,7 @@ namespace ClienteAPI
             builder.Services.AddSwaggerGen();
             builder.Services.AddRepositories();
             builder.Services.AddServices();
+            builder.Services.AddMensageria();
             builder.Services.AddConnectionString();
             var app = builder.Build();
 

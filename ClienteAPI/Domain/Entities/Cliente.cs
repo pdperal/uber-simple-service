@@ -11,12 +11,14 @@ namespace Domain.Entities
         public Guid Id { get; private set; }
         public string Nome { get; private set; }
         public string CPF { get; private set; }
+        public decimal Saldo { get; private set; }
 
-        public Cliente(string nome, string cPF)
+        public Cliente(string nome, string cPF, decimal saldo)
         {
             Id = Guid.NewGuid();
             Nome = nome;
             CPF = cPF;
+            Saldo = saldo;  
         }
     }
 }

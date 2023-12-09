@@ -1,91 +1,43 @@
-﻿using Domain.DTO;
+﻿
+
+using Domain.DTO.Clientes;
+using Domain.DTO.Cotacao;
 using Domain.Entities;
 using Domain.Interfaces.Data;
+using Domain.Interfaces.IntegrationService;
 using Domain.Interfaces.Services;
 using Domain.ViewModels;
 
 namespace Domain.Services
 {
-    public class ClienteService : IClienteService
+    public class CotacaoService : ICotacaoService
     {
-        private readonly IClienteRepository _clienteRepository;
+        private readonly IPrecoAPI _precoApi;
 
-        public ClienteService(IClienteRepository clienteRepository)
+        public CotacaoService(IPrecoAPI precoApi)
         {
-            _clienteRepository = clienteRepository;
+            _precoApi = precoApi;
         }
 
-        public Result<NovoClienteViewModel> CadastrarCliente(NovoClienteDTO cliente)
+        public Result<Cotacao> SolicitarCotacao(NovaCotacaoDTO novaCotacaoDTO)
         {
             try
             {
-                var entidade = cliente.ToEntity();
+                var cotacao = _precoApi.ObterCotacaoCorrida(novaCotacaoDTO);
 
-                var idClienteDb = _clienteRepository.BuscarIdClientePorCpf(entidade.CPF);
-
-                if (!string.IsNullOrWhiteSpace(idClienteDb))
+                if (cotacao is not null)
                 {
-                    return new Result<NovoClienteViewModel>
-                        (
-                            success: true,
-                            message: "Cliente já cadastrado",
-                            data: new NovoClienteViewModel(Guid.Parse(idClienteDb))
-                        );                    
+                    return new Result<Cotacao>(success: true,
+                        data: cotacao);
                 }
 
-                var sucesso = _clienteRepository.SalvarCliente(entidade);
+                return new Result<Cotacao>(success: false,
+                        message: "Não foi possível solicitar a cotação.");
 
-                if (sucesso)
-                {
-                    return new Result<NovoClienteViewModel>
-                        (
-                            success: true,
-                            data: new NovoClienteViewModel(entidade.Id)
-                        );
-                }
-
-                return new Result<NovoClienteViewModel>
-                   (
-                       success: false,
-                       message: "Não foi possível cadastrar o cliente."
-                   );
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex);
-                return new Result<NovoClienteViewModel>
-                    (
-                        success: false,
-                        message: "Erro ao cadastrar novo cliente."
-                    );
-            }
-        }
-
-        public Result<List<ClienteViewModel>> ListarClientes()
-        {
-            try
-            {
-                var clientes = _clienteRepository.BuscarTodosClientes();
-
-                if (clientes.Any())
-                {
-                    var clientesResponse = clientes
-                        .Select(x => new ClienteViewModel(x.Id, x.Nome, x.CPF))
-                        .ToList();
-
-                    return new Result<List<ClienteViewModel>>(success: true, data: clientesResponse);
-                }
-
-                return new Result<List<ClienteViewModel>>(success: true);
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex);
-                return new Result<List<ClienteViewModel>>
-                    (
-                        success: false,
-                        message: "Erro ao cadastrar novo cliente."
-                    );
+                throw;
             }
         }
     }

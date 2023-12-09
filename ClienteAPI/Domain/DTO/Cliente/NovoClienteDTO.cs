@@ -1,20 +1,16 @@
 ﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Domain.DTO
+namespace Domain.DTO.Clientes
 {
     public class NovoClienteDTO
     {
         public string Nome { get; set; }
         public string CPF { get; set; }
+        public decimal SaldoInicial { get; set; }
 
         public Cliente ToEntity()
         {
-            return new Cliente(Nome, CPF);
+            return new Cliente(Nome, CPF, SaldoInicial);
         }
     }
 }

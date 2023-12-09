@@ -1,4 +1,4 @@
-using Domain.DTO;
+using Domain.DTO.Clientes;
 using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 

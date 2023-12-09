@@ -1,4 +1,4 @@
-﻿using Domain.DTO;
+﻿using Domain.DTO.Clientes;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
