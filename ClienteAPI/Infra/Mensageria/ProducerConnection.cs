@@ -1,0 +1,19 @@
+﻿using RabbitMQ.Client;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Infra.Mensageria
+{
+    public class ProducerConnection
+    {
+        public IConnection Connection { get; private set; }
+
+        public ProducerConnection(IConnection connection)
+        {
+            Connection = connection;
+        }
+    }
+}
