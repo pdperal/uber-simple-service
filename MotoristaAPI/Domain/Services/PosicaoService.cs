@@ -1,92 +1,65 @@
 ﻿using Domain.DTO;
 using Domain.Entities;
+using Domain.Interfaces.Cache;
 using Domain.Interfaces.Data;
 using Domain.Interfaces.Services;
 using Domain.ViewModels;
+using Newtonsoft.Json;
 
 namespace Domain.Services
 {
     public class PosicaoService : IPosicaoService
     {
         private readonly IMotoristaRepository _motoristaRepository;
+        private readonly IRedisService _redisService;
 
-        public PosicaoService(IMotoristaRepository motoristaRepository)
+        public PosicaoService(IMotoristaRepository motoristaRepository, IRedisService redisService)
         {
             _motoristaRepository = motoristaRepository;
-        }
+            _redisService = redisService;
+        }      
 
-        public Result<NovoMotoristaViewModel> CadastrarMotorista(NovoMotoristaDTO motorista)
+        public void GerarPosicaoAleatoria(Guid motoristaId)
         {
             try
             {
-                var entidade = motorista.ToEntity();
+                // método resonsavel por gerar uma posição aleatória dentro de Porto alegre
+                // foi definido um quadrado no centro da cidade com as posições máximas (direita, esquerda, baixo, cima)
+                // exemplo:
+                //  ______
+                // |      |
+                // |      |
+                // |      |
+                // --------
+                // o método pega esses valores min/max e gera um numero aleatorio entre eles, para determinar uma posição aleatoria dentro do quadrado
 
-                var idMotoristaDb = _motoristaRepository.BuscarIdMotoristaPorCpf(entidade.CPF);
+                var latitude = GerarPosicaoAleatoria(Constants.BAIXO, Constants.CIMA);
+                var longitude = GerarPosicaoAleatoria(Constants.ESQUERDA, Constants.DIREITA);
 
-                if (!string.IsNullOrWhiteSpace(idMotoristaDb))
+                var latitudeParse = double.Parse(string.Concat(-30, ',', latitude));
+                var longitudeParse = double.Parse(string.Concat(-51, ',', longitude));
+
+                _redisService.SetCache(motoristaId.ToString(), JsonConvert.SerializeObject(new PosicaoMotoristaDTO
                 {
-                    return new Result<NovoMotoristaViewModel>
-                        (
-                            success: true,
-                            message: "Motorista já cadastrado",
-                            data: new NovoMotoristaViewModel(Guid.Parse(idMotoristaDb))
-                        );                    
-                }
+                    IdMotorista = motoristaId,
+                    Latitude = latitudeParse,
+                    Longitude = longitudeParse
+                }));
 
-                var sucesso = _motoristaRepository.SalvarMotorista(entidade);
 
-                if (sucesso)
-                {
-                    return new Result<NovoMotoristaViewModel>
-                        (
-                            success: true,
-                            data: new NovoMotoristaViewModel(entidade.Id)
-                        );
-                }
-
-                return new Result<NovoMotoristaViewModel>
-                   (
-                       success: false,
-                       message: "Não foi possível cadastrar o motorista."
-                   );
             }
-            catch(Exception ex)
+            catch
             {
-                Console.WriteLine(ex);
-                return new Result<NovoMotoristaViewModel>
-                    (
-                        success: false,
-                        message: "Erro ao cadastrar novo motorista."
-                    );
+                throw;
             }
-        }
-
-        public Result<List<MotoristaViewModel>> ListarMotoristas()
+        }    
+        
+        private static string GerarPosicaoAleatoria(int direcaoMax, int direcaoMin)
         {
-            try
-            {
-                var motoristas = _motoristaRepository.BuscarTodosMotoristas();
+            Random random = new Random();
+            //return random.NextDouble() * (direcaoMax - direcaoMin) + direcaoMin;
 
-                if (motoristas.Any())
-                {
-                    var motoristasResponse = motoristas
-                        .Select(x => new MotoristaViewModel(x.Id, x.Nome, x.CPF))
-                        .ToList();
-
-                    return new Result<List<MotoristaViewModel>>(success: true, data: motoristasResponse);
-                }
-
-                return new Result<List<MotoristaViewModel>>(success: true);
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex);
-                return new Result<List<MotoristaViewModel>>
-                    (
-                        success: false,
-                        message: "Erro ao cadastrar novo motorista."
-                    );
-            }
+            return random.Next(direcaoMin, direcaoMax).ToString().PadLeft(6, '0');
         }
     }
 }

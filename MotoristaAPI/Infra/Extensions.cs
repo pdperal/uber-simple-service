@@ -1,8 +1,10 @@
 ﻿using Application.Jobs;
+using Domain.Interfaces.Cache;
 using Domain.Interfaces.Data;
 using Domain.Interfaces.Mensageria;
 using Domain.Interfaces.Services;
 using Domain.Services;
+using Infra.Cache;
 using Infra.Data;
 using Infra.Data.Repositories;
 using Infra.Mensageria;
@@ -25,7 +27,9 @@ namespace Infra
         public static IServiceCollection AddServices(this IServiceCollection collection)
         {
             collection.AddScoped<IMotoristaService, MotoristaService>();
-            collection.AddSingleton<ICorridaService, CorridaService>();
+            collection.AddScoped<ICorridaService, CorridaService>();
+            collection.AddScoped<IPosicaoService, PosicaoService>();
+            collection.AddScoped<IRedisService, RedisService>();
 
             return collection;
         }

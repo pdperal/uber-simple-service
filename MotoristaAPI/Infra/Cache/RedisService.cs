@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Interfaces.Cache;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Infra.Cache
 {
-    public class RedisService
+    public class RedisService : IRedisService
     {
         private readonly IDistributedCache _distributedCache;
 
@@ -18,11 +19,9 @@ namespace Infra.Cache
             _distributedCache = distributedCache;
         }
 
-        public List<MotoristaCache> BuscarMotoristas()
+        public void SetCache(string key, string value)
         {
-            var json = _distributedCache.GetString("motorista:localizacao");
-
-            return JsonConvert.DeserializeObject<List<MotoristaCache>>(json);
+            _distributedCache.SetString($"motoristas:{key}", value);
         }
     }
 }

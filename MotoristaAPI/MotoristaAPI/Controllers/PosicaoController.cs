@@ -1,5 +1,5 @@
-using Domain.DTO;
 using Domain.Interfaces.Services;
+using Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MotoristaAPI.Controllers
@@ -9,47 +9,31 @@ namespace MotoristaAPI.Controllers
     public class PosicaoController : ControllerBase
     {
         private readonly ILogger<PosicaoController> _logger;
-        private readonly IMotoristaService _motoristaService;
+        private readonly IPosicaoService _posicaoService;
 
-        public PosicaoController(ILogger<PosicaoController> logger, IMotoristaService motoristaService)
+        public PosicaoController(ILogger<PosicaoController> logger, IPosicaoService posicaoService)
         {
             _logger = logger;
-            _motoristaService = motoristaService;
+            _posicaoService = posicaoService;
         }
 
         [HttpPost]
         [Route("GerarPosicaoAleatoria")]
         public IActionResult CadastrarMotorista(Guid motoristaId)
         {
-            var resultado = _motoristaService.CadastrarMotorista(novoMotoristaDTO);
+            _posicaoService.GerarPosicaoAleatoria(motoristaId);
+            //var resultado = _motoristaService.CadastrarMotorista(novoMotoristaDTO);
 
-            if (resultado.Success)
-            {
-                return Ok(resultado.Data.Id);
-            }
+            //if (resultado.Success)
+            //{
+            //    return Ok(resultado.Data.Id);
+            //}
 
-            return BadRequest(resultado.Message);
+            //return BadRequest(resultado.Message);
+
+            return Ok();
         }
 
-        [HttpGet]
-        [Route("ListarMotorista")]
-        public IActionResult ListarListarMotoristas()
-        {
-            var resultado = _motoristaService.ListarMotoristas();
-
-            if (resultado.Success)
-            {
-                if (resultado.Data is not null
-                     && resultado.Data.Any())
-                {
-                    return Ok(resultado.Data);
-                }
-
-                return NoContent();
-                
-            }
-
-            return BadRequest(resultado.Message);
-        }
+        
     }
 }

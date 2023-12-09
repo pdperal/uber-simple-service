@@ -11,5 +11,6 @@ namespace Domain.Interfaces.Services
 {
     public interface IPosicaoService
     {
+        void GerarPosicaoAleatoria(Guid motoristaId);
     }
 }
