@@ -28,9 +28,10 @@ namespace Domain.Services
                 var longitudeOrigemDecimal = ConverterCoordenadas(longitudeOrigem);
                 var latitudeDestinoDecimal = ConverterCoordenadas(latitudeDestino);
                 var longitudeDestinoDecimal = ConverterCoordenadas(longitudeDestino);
+                var chaveGoogle = File.ReadAllText("C:\\Users\\pep90\\Downloads\\chave_google.txt");
 
                 var chamadaApi = _httpclient
-                    .GetAsync($"https://maps.googleapis.com/maps/api/distancematrix/json?destinations={latitudeDestinoDecimal.ToString("0.0000").Replace(',', '.')}%2C{longitudeDestinoDecimal.ToString("0.0000").Replace(',', '.')}&origins={latitudeOrigemDecimal.ToString("0.0000").Replace(',', '.')}%2C{longitudeOrigemDecimal.ToString("0.0000").Replace(',', '.')}&key=AIzaSyCOqAaeH5KNaJGeMPTpIjZg2Ut9cG9eu_o&mode=driving")
+                    .GetAsync($"https://maps.googleapis.com/maps/api/distancematrix/json?destinations={latitudeDestinoDecimal.ToString("0.0000").Replace(',', '.')}%2C{longitudeDestinoDecimal.ToString("0.0000").Replace(',', '.')}&origins={latitudeOrigemDecimal.ToString("0.0000").Replace(',', '.')}%2C{longitudeOrigemDecimal.ToString("0.0000").Replace(',', '.')}&key={chaveGoogle}&mode=driving")
                     .GetAwaiter()
                     .GetResult();
 
