@@ -35,7 +35,7 @@ namespace Infra
             {
                 HostName = "localhost",
             };
-            var connection = connectionFactory.CreateConnection("cliente-api");
+            var connection = connectionFactory.CreateConnection("cliente-publisher");
 
             var connectionProducer = new ProducerConnection(connection);
             var channel = connectionProducer.Connection.CreateModel();

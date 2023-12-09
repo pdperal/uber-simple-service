@@ -25,7 +25,7 @@ namespace Infra.Cache
                 SlidingExpiration = TimeSpan.FromMinutes(5)
             };
 
-            _distributedCache.SetString(key, value, memoryCacheEntryOptions);
+            _distributedCache.SetString($"cotacao:{key}", value, memoryCacheEntryOptions);
         }
     }
 }

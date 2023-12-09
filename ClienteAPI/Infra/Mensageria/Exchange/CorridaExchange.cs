@@ -22,7 +22,7 @@ namespace Infra.Mensageria.Exchange
         {
             try
             {
-                _channel.BasicPublish(_exchange, "nova-corrida", null, Encoding.UTF8.GetBytes(message));
+                _channel.BasicPublish(_exchange, "nova-corrida-queue", null, Encoding.UTF8.GetBytes(message));
             }
             catch
             {
