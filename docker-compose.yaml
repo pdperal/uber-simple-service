@@ -2,15 +2,39 @@ version: '3.8'
 
 
 services:
-  postgres:
+  postgres-cliente:
     image: postgres
     volumes:
-      - ./scripts_sql.sql:/docker-entrypoint-initdb.d/scripts_sql.sql
+      - ./scripts_sql_cliente.sql:/docker-entrypoint-initdb.d/scripts_sql_cliente.sql
+    environment:
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_USER: "postgres"
+    expose:
+      - "5433"
+    ports:
+      - "5433:5433"
+    command: -p 5433
+  postgres-motorista:
+    image: postgres
+    volumes:
+      - ./scripts_sql_motorista.sql:/docker-entrypoint-initdb.d/scripts_sql_motorista.sql
     environment:
       POSTGRES_PASSWORD: "postgres"
       POSTGRES_USER: "postgres"
     ports:
       - "5432:5432"
+  postgres-corrida:
+    image: postgres
+    volumes:
+      - ./scripts_sql_motorista.sql:/docker-entrypoint-initdb.d/scripts_sql_motorista.sql
+    environment:
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_USER: "postgres"
+    expose:
+      - "5434"
+    ports:
+      - "5434:5434"
+    command: -p 5434
   cache:
     image: redis:latest
     restart: always
@@ -37,6 +61,22 @@ services:
       dockerfile: MotoristaAPI\MotoristaAPI\Dockerfile
     ports:
       - 5007:80  
+  preco.api:
+    image: ${DOCKER_REGISTRY-}preco.api
+    container_name: preco.api
+    build:
+      context: .
+      dockerfile: PrecoAPI\PrecoAPI\Dockerfile
+    ports:
+      - 5008:80  
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq-uber
+    restart: unless-stopped
+    ports:
+      - 5672:5672
+      - 15672:15672
+      - 15692:15692
 volumes:
   cache:
     driver: local
