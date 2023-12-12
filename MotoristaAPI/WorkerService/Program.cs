@@ -18,7 +18,6 @@ namespace WorkerService
 
                     services.AddStackExchangeRedisCache(options =>
                     {
-                        options.InstanceName = "motorista-cache";
                         options.Configuration = "localhost:6379";
                     });
                 })

@@ -30,13 +30,19 @@ namespace Infra.Mensageria.Queue
 
                 consumer.Received += (sender, eventArgs) =>
                 {
-                    var contentByteArray = eventArgs.Body.ToArray();
-                    var contentString = Encoding.UTF8.GetString(contentByteArray);
-                    var message = JsonConvert.DeserializeObject<Corrida>(contentString);
+                    try
+                    {
+                        var contentByteArray = eventArgs.Body.ToArray();
+                        var contentString = Encoding.UTF8.GetString(contentByteArray);
+                        var message = JsonConvert.DeserializeObject<Corrida>(contentString);
 
-                    action.Invoke(message);
-
-                    _channel.BasicAck(eventArgs.DeliveryTag, false);
+                        action.Invoke(message);
+                        _channel.BasicAck(eventArgs.DeliveryTag, false);
+                    }
+                    catch
+                    {
+                        _channel.BasicAck(eventArgs.DeliveryTag, false);
+                    }
 
                 };
 

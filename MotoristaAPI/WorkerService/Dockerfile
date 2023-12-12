@@ -8,10 +8,11 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["WorkerService/WorkerService.csproj", "WorkerService/"]
+COPY ["MotoristaAPI/WorkerService/WorkerService.csproj", "WorkerService/"]
 RUN dotnet restore "WorkerService/WorkerService.csproj"
-COPY . .
+
 WORKDIR "/src/WorkerService"
+COPY . .
 RUN dotnet build "WorkerService.csproj" -c Release -o /app/build
 
 FROM build AS publish

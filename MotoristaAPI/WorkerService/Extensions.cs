@@ -1,8 +1,9 @@
-﻿using Application.Jobs;
+﻿using Domain.Interfaces.Cache;
 using Domain.Interfaces.Data;
 using Domain.Interfaces.Mensageria;
 using Domain.Interfaces.Services;
 using Domain.Services;
+using Infra.Cache;
 using Infra.Data;
 using Infra.Data.Repositories;
 using Infra.Mensageria;
@@ -46,6 +47,7 @@ namespace WorkerService.Extension
         {
             collection.AddSingleton<IMotoristaService, MotoristaService>();
             collection.AddSingleton<ICorridaService, CorridaService>();
+            collection.AddSingleton<IRedisService, RedisService>();
 
             return collection;
         }
