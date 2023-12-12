@@ -21,7 +21,6 @@ namespace GeoLocalizacaoAPI
             builder.Services.AddScoped<IRedisService, RedisService>();
             builder.Services.AddStackExchangeRedisCache(options =>
             {
-                options.InstanceName = "preco-cache";
                 options.Configuration = "localhost:6379";
             });
 

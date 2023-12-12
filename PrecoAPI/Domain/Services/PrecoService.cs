@@ -1,4 +1,7 @@
-﻿using Domain.Interfaces;
+﻿using Domain.DTO;
+using Domain.Entities;
+using Domain.ValueObjects;
+using Domain.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -20,26 +23,29 @@ namespace Domain.Services
             _httpclient = new HttpClient();
             _redisService = redisService;
         }
-        public Result CalcularCotacao(string latitudeOrigem, string longitudeOrigem, string latitudeDestino, string longitudeDestino)
+        public Cotacao CalcularCotacao(string latitudeOrigem, string longitudeOrigem, string latitudeDestino, string longitudeDestino)
         {
             try
             {
-                var latitudeOrigemDecimal = ConverterCoordenadas(latitudeOrigem);
-                var longitudeOrigemDecimal = ConverterCoordenadas(longitudeOrigem);
-                var latitudeDestinoDecimal = ConverterCoordenadas(latitudeDestino);
-                var longitudeDestinoDecimal = ConverterCoordenadas(longitudeDestino);
+                var latitudeOrigemDecimal = ConverterCoordenadas(latitudeOrigem).ToString("0.0000");
+                var longitudeOrigemDecimal = ConverterCoordenadas(longitudeOrigem).ToString("0.0000");
+                var latitudeDestinoDecimal = ConverterCoordenadas(latitudeDestino).ToString("0.0000");
+                var longitudeDestinoDecimal = ConverterCoordenadas(longitudeDestino).ToString("0.0000");
                 var chaveGoogle = File.ReadAllText("C:\\Users\\pep90\\Downloads\\chave_google.txt");
 
                 var chamadaApi = _httpclient
-                    .GetAsync($"https://maps.googleapis.com/maps/api/distancematrix/json?destinations={latitudeDestinoDecimal.ToString("0.0000").Replace(',', '.')}%2C{longitudeDestinoDecimal.ToString("0.0000").Replace(',', '.')}&origins={latitudeOrigemDecimal.ToString("0.0000").Replace(',', '.')}%2C{longitudeOrigemDecimal.ToString("0.0000").Replace(',', '.')}&key={chaveGoogle}&mode=driving")
+                    .GetAsync($"https://maps.googleapis.com/maps/api/distancematrix/json?destinations={latitudeDestinoDecimal.Replace(',', '.')}%2C{longitudeDestinoDecimal.Replace(',', '.')}&origins={latitudeOrigemDecimal.Replace(',', '.')}%2C{longitudeOrigemDecimal.Replace(',', '.')}&key={chaveGoogle}&mode=driving")
                     .GetAwaiter()
                     .GetResult();
 
                 if (chamadaApi.IsSuccessStatusCode)
                 {
-                    var result = JsonConvert.DeserializeObject<Rootobject>(chamadaApi.Content.ReadAsStringAsync().GetAwaiter().GetResult());
+                    var result = JsonConvert.DeserializeObject<GoogleMapsResponseDto>(chamadaApi.Content.ReadAsStringAsync().GetAwaiter().GetResult());
 
-                    var cotacao = new Result(CalcularValorCotacao(result.rows.First().elements.First().distance.value));
+                    var preço = CalcularValorCotacao(result.rows.First().elements.First().distance.value);
+                    var cotacao = new Cotacao(preço,
+                        localizacaoOrigem: new Localizacao(double.Parse(latitudeOrigemDecimal), double.Parse(longitudeOrigemDecimal)),
+                        localizacaoDestino: new Localizacao(double.Parse(latitudeDestinoDecimal), double.Parse(longitudeDestinoDecimal)));
 
                     _redisService.SetCache(cotacao.Id.ToString(), JsonConvert.SerializeObject(cotacao));
 
@@ -81,51 +87,5 @@ namespace Domain.Services
 
             return -(grau + minutos + horas);
         }
-    }
-
-    public class Result
-    {
-        public Guid Id { get; private set; }
-        public decimal Valor { get; private set; }
-
-        public Result(decimal valor)
-        {
-            Id = Guid.NewGuid();
-            Valor = valor;
-        }
-    }
-
-
-
-    public class Rootobject
-    {
-        public string[] destination_addresses { get; set; }
-        public string[] origin_addresses { get; set; }
-        public Row[] rows { get; set; }
-        public string status { get; set; }
-    }
-
-    public class Row
-    {
-        public List<Element> elements { get; set; }
-    }
-
-    public class Element
-    {
-        public Distance distance { get; set; }
-        public Duration duration { get; set; }
-        public string status { get; set; }
-    }
-
-    public class Distance
-    {
-        public string text { get; set; }
-        public int value { get; set; }
-    }
-
-    public class Duration
-    {
-        public string text { get; set; }
-        public int value { get; set; }
     }
 }
