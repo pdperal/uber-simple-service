@@ -20,7 +20,7 @@ namespace Infra.IntegrationService
             _httpClient = new HttpClient();
         }
 
-        public Cotacao ObterCotacaoCorrida(NovaCotacaoDTO novaCotacaoDTO)
+        public CotacaoDTO ObterCotacaoCorrida(NovaCotacaoDTO novaCotacaoDTO)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace Infra.IntegrationService
                 {
                     var cotacao = request.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
-                    return JsonConvert.DeserializeObject<Cotacao>(cotacao);
+                    return JsonConvert.DeserializeObject<CotacaoDTO>(cotacao);
                 }
 
                 return default;

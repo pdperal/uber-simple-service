@@ -97,15 +97,14 @@ namespace Infra.Data.Repositories
             var conn = dataSource.OpenConnection();
             try
             {
-                var cmd = new NpgsqlCommand("insert into cliente (id, nome, cpf, saldo) " +
-                    " values (@p1, @p2, @p3, @p4) ", conn)
+                var cmd = new NpgsqlCommand("insert into cliente (id, nome, cpf) " +
+                    " values (@p1, @p2, @p3) ", conn)
                 {
                     Parameters =
                     {
                         new("p1", cliente.Id),
                         new("p2", cliente.Nome),
-                        new("p3", cliente.CPF),
-                        new("p4", cliente.Saldo),
+                        new("p3", cliente.CPF)
                     }
                 };
 

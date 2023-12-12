@@ -19,7 +19,7 @@ namespace Domain.Services
             _precoApi = precoApi;
         }
 
-        public Result<Cotacao> SolicitarCotacao(NovaCotacaoDTO novaCotacaoDTO)
+        public Result<CotacaoDTO> SolicitarCotacao(NovaCotacaoDTO novaCotacaoDTO)
         {
             try
             {
@@ -27,11 +27,11 @@ namespace Domain.Services
 
                 if (cotacao is not null)
                 {
-                    return new Result<Cotacao>(success: true,
+                    return new Result<CotacaoDTO>(success: true,
                         data: cotacao);
                 }
 
-                return new Result<Cotacao>(success: false,
+                return new Result<CotacaoDTO>(success: false,
                         message: "Não foi possível solicitar a cotação.");
 
             }

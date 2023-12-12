@@ -10,6 +10,6 @@ namespace Domain.Interfaces.IntegrationService
 {
     public interface IPrecoAPI
     {
-        public Cotacao ObterCotacaoCorrida(NovaCotacaoDTO novaCotacaoDTO);
+        public CotacaoDTO ObterCotacaoCorrida(NovaCotacaoDTO novaCotacaoDTO);
     }
 }

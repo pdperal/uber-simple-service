@@ -9,12 +9,12 @@ namespace Domain.Entities
     public class Cotacao
     {
         public Guid Id { get; private set; }
-        public decimal Valor { get; private set; }
+        public decimal Preco { get; private set; }
 
         public Cotacao(decimal valor)
         {
             Id = Guid.NewGuid();
-            Valor = valor;
+            Preco = valor;
         }
     }
 }

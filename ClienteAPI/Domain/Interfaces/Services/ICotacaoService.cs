@@ -12,6 +12,6 @@ namespace Domain.Interfaces.Services
 {
     public interface ICotacaoService
     {
-        public Result<Cotacao> SolicitarCotacao(NovaCotacaoDTO novaCotacaoDTO);
+        public Result<CotacaoDTO> SolicitarCotacao(NovaCotacaoDTO novaCotacaoDTO);
     }
 }
