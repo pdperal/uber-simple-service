@@ -23,18 +23,6 @@ services:
       POSTGRES_USER: "postgres"
     ports:
       - "5432:5432"
-  postgres-corrida:
-    image: postgres
-    volumes:
-      - ./scripts_sql_motorista.sql:/docker-entrypoint-initdb.d/scripts_sql_motorista.sql
-    environment:
-      POSTGRES_PASSWORD: "postgres"
-      POSTGRES_USER: "postgres"
-    expose:
-      - "5434"
-    ports:
-      - "5434:5434"
-    command: -p 5434
   cache:
     image: redis:latest
     restart: always
@@ -69,6 +57,12 @@ services:
       dockerfile: PrecoAPI\PrecoAPI\Dockerfile
     ports:
       - 5008:80  
+  worker.motorista:
+    image: ${DOCKER_REGISTRY-}worker.motorista
+    container_name: worker.motorista
+    build:
+      context: .
+      dockerfile: MotoristaAPI\WorkerService\Dockerfile
   rabbitmq:
     image: rabbitmq:management
     container_name: rabbitmq-uber
