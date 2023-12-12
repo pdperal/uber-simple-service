@@ -1,5 +1,4 @@
-﻿using Application.Jobs;
-using Domain.Interfaces.Cache;
+﻿using Domain.Interfaces.Cache;
 using Domain.Interfaces.Data;
 using Domain.Interfaces.Mensageria;
 using Domain.Interfaces.Services;

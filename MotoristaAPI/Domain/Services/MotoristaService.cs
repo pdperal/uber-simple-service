@@ -61,6 +61,8 @@ namespace Domain.Services
             }
         }
 
+        
+
         public Result<List<MotoristaViewModel>> ListarMotoristas()
         {
             try

@@ -21,7 +21,11 @@ namespace Infra.Cache
 
         public void SetCache(string key, string value)
         {
-            _distributedCache.SetString($"motoristas:{key}", value);
+            _distributedCache.SetString(key, value);
+        }
+        public string GetCache(string key)
+        {
+            return _distributedCache.GetString(key);
         }
     }
 }

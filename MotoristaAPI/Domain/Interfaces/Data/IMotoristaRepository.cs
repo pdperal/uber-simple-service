@@ -12,6 +12,9 @@ namespace Domain.Interfaces.Data
     {
         public string BuscarIdMotoristaPorCpf(string cpf);
         public bool SalvarMotorista(Motorista motorista);
+        public List<CorridaDTO> ListarCorridas();
+        public bool FinalizarCorrida(Guid corridaId);
+        public bool AssociarCorridaAoMotorista(CorridaMotorista corridaMotorista);
         public List<MotoristaDTO> BuscarTodosMotoristas();
     }
 }

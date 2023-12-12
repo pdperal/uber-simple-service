@@ -25,7 +25,6 @@ namespace MotoristaAPI
             builder.Services.AddConnectionString();
             builder.Services.AddStackExchangeRedisCache(options =>
             {
-                options.InstanceName = "preco-cache";
                 options.Configuration = "localhost:6379";
             });
             var app = builder.Build();

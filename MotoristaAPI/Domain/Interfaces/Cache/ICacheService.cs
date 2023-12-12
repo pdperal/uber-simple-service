@@ -9,5 +9,6 @@ namespace Domain.Interfaces.Cache
     public interface IRedisService
     {
         void SetCache(string key, string value);
+        public string GetCache(string key);
     }
 }

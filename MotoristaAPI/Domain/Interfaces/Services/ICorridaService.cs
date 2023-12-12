@@ -11,6 +11,8 @@ namespace Domain.Interfaces.Services
 {
     public interface ICorridaService
     {
+        public void FinalizarCorrida(Guid idCorrida);
         void ProcessarSolicitacaoCorrida(Corrida corrida);
+        List<CorridaDTO> ListarCorridas();
     }
 }

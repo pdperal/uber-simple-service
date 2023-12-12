@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Domain.ValueObjects
 {
-    public class MotoristaCache
+    public struct Localizacao
     {
-        public Guid Id { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
+
     }
 }

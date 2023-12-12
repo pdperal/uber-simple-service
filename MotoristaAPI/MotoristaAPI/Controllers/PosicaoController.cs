@@ -19,17 +19,9 @@ namespace MotoristaAPI.Controllers
 
         [HttpPost]
         [Route("GerarPosicaoAleatoria")]
-        public IActionResult CadastrarMotorista(Guid motoristaId)
+        public IActionResult CadastrarMotorista()
         {
-            _posicaoService.GerarPosicaoAleatoria(motoristaId);
-            //var resultado = _motoristaService.CadastrarMotorista(novoMotoristaDTO);
-
-            //if (resultado.Success)
-            //{
-            //    return Ok(resultado.Data.Id);
-            //}
-
-            //return BadRequest(resultado.Message);
+            _posicaoService.GerarPosicaoAleatoria();           
 
             return Ok();
         }
